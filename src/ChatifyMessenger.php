@@ -238,6 +238,15 @@ class ChatifyMessenger
         return 1;
     }
 
+     public function makeSeenInWeb($user_id)
+    {
+        Message::Where('from_id', $user_id)
+            ->where('to_id', auth('web')->user()->id)
+            ->where('seen', 0)
+            ->update(['seen' => 1]);
+        return 1;
+    }
+
     /**
      * Get last message for a specific user
      *
@@ -317,6 +326,13 @@ class ChatifyMessenger
     public function inFavorite($user_id)
     {
         return Favorite::where('user_id', auth('api')->user()->id)
+                        ->where('favorite_id', $user_id)->count() > 0
+                        ? true : false;
+    }
+
+    public function inFavoriteInWeb($user_id)
+    {
+        return Favorite::where('user_id', auth('web')->user()->id)
                         ->where('favorite_id', $user_id)->count() > 0
                         ? true : false;
     }
