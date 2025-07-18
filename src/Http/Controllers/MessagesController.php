@@ -298,8 +298,8 @@ class MessagesController extends Controller
     {
         $userId = $request['user_id'];
         // check action [star/unstar]
-        $favoriteStatus = Chatify::inFavorite($userId) ? 0 : 1;
-        Chatify::makeInFavorite($userId, $favoriteStatus);
+        $favoriteStatus = Chatify::inFavoriteInWeb($userId) ? 0 : 1;
+        Chatify::makeInFavoriteInWeb($userId, $favoriteStatus);
 
         // send the response
         return Response::json([

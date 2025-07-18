@@ -269,6 +269,11 @@ class ChatifyMessenger
         return Message::where('from_id', $user_id)->where('to_id', auth('api')->user()->id)->where('seen', 0)->count();
     }
 
+     public function countUnseenMessagesInWeb($user_id)
+    {
+        return Message::where('from_id', $user_id)->where('to_id', auth('web')->user()->id)->where('seen', 0)->count();
+    }
+
     /**
      * Get user list's item data [Contact Itme]
      * (e.g. User data, Last message, Unseen Counter...)
@@ -283,7 +288,7 @@ class ChatifyMessenger
             // get last message
             $lastMessage = $this->getLastMessageQuery($user->id);
             // Get Unseen messages counter
-            $unseenCounter = $this->countUnseenMessages($user->id);
+            $unseenCounter = $this->countUnseenMessagesInWeb($user->id);
             if ($lastMessage) {
                 $lastMessage->created_at = $lastMessage->created_at->toIso8601String();
                 $lastMessage->timeAgo = $lastMessage->created_at->diffForHumans();
@@ -356,6 +361,22 @@ class ChatifyMessenger
         } else {
             // UnStar
             $star = Favorite::where('user_id', auth('api')->user()->id)->where('favorite_id', $user_id)->delete();
+            return $star ? true : false;
+        }
+    }
+
+     public function makeInFavoriteInWeb($user_id, $action)
+    {
+        if ($action > 0) {
+            // Star
+            $star = new Favorite();
+            $star->user_id = auth('web')->user()->id;
+            $star->favorite_id = $user_id;
+            $star->save();
+            return $star ? true : false;
+        } else {
+            // UnStar
+            $star = Favorite::where('user_id', auth('web')->user()->id)->where('favorite_id', $user_id)->delete();
             return $star ? true : false;
         }
     }
