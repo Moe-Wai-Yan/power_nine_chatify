@@ -470,10 +470,15 @@ class ChatifyMessenger
      * @param string $user_avatar_name
      * @return string
      */
-     public function getUserAvatarUrl($user_avatar_name)
-        {
-            return asset('/image/public/customer-photo') . '/' . $user_avatar_name;
+    public function getUserAvatarUrl($user_avatar_name)
+    {
+        if (!empty($user_avatar_name)) {
+            // If no avatar, return default avatar
+            return asset('image/public/'.config('chatify.user_avatar.folder') . '/' . $user_avatar_name);
         }
+        return asset('assets/images/users/user-dummy-img.jpg');
+        // return asset('image/public/'.config('chatify.user_avatar.folder') . '/' . $user_avatar_name);
+    }
 
     /**
      * Get attachment's url.
