@@ -136,7 +136,7 @@ class MessagesController extends Controller
                 'type' => $request['type'],
                 'from_id' => auth('api')->user()->id,
                 'to_id' => $request['id'],
-                'body' => htmlentities(trim($request['message']), ENT_QUOTES, 'UTF-8'),
+                 'body' => trim($request['message']),
                 'sent_by' => 'user',
                 'attachment' => ($attachment) ? json_encode((object)[
                     'new_name' => $attachment,
